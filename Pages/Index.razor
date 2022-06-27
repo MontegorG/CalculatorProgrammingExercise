@@ -1,0 +1,102 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<EditForm Model="@calculator" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <p>
+        <label>
+            First Number:
+            <InputNumber @bind-Value="calculator.Num1" />
+        </label>
+        <label>
+            Operation:
+            <InputSelect @bind-Value="calculator.op" >
+                <option value=@Index.operation.Addition>+</option>
+                <option value=@Index.operation.Subtraction>-</option>
+                <option value=@Index.operation.Multiplication>X</option>
+                <option value=@Index.operation.Division>/</option>
+                <option value=@Index.operation.Exponent>^</option>
+                <option value=@Index.operation.Remainder>%</option>
+            </InputSelect>
+        </label>
+        <label>
+            Second Number:
+            <InputNumber @bind-Value="calculator.Num2" />
+        </label>
+        <label>
+            Result: @result
+        </label>
+    </p>
+    <button type="submit">Calculate</button> 
+</EditForm>
+
+@code {
+    public enum operation
+    {
+        Addition,
+        Subtraction,
+        Multiplication,
+        Division,
+        Exponent,
+        Remainder
+    }
+    private double result = 0;
+    private Model.Calculator calculator = new() { Num1 = 0, Num2 = 0, op = operation.Addition };
+
+    private void HandleValidSubmit()
+    {
+        expression(calculator.Num1, calculator.op, calculator.Num2);
+    }
+
+    public void expression(double num1, operation op, double num2)
+    {
+        if (op == operation.Addition){
+            result = add(num1, num2);
+        } else if (op == operation.Subtraction){
+            result = subtract(num1, num2);
+        } else if (op == operation.Multiplication){
+            result = multiply(num1, num2);
+        } else if (op == operation.Division){
+            result = divide(num1, num2);
+        } else if (op == operation.Exponent){
+            result = exponent(num1, num2);
+        } else {
+            result = modulus(num1, num2);
+        } 
+    }
+    public void clear()
+    {
+        calculator.Num1 = 0;
+        calculator.Num2 = 0;
+        calculator.op = operation.Addition;
+        result = 0;
+    }
+    private double add (double num1, double num2)
+    {
+        return (num1 + num2);
+    }
+    private double subtract (double num1, double num2)
+    {
+        return (num1 - num2);
+    }
+    private double multiply (double num1, double num2)
+    {
+        return (num1 * num2);
+    }
+    private double divide (double num1, double num2)
+    {
+        return (num1 / num2);
+    }
+    private double exponent (double num1, double num2)
+    {
+        return Math.Pow(num1, num2);
+    }
+    private double modulus (double num1, double num2)
+    {
+        return (num1 % num2);
+    }
+
+}
